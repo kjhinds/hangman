@@ -15,4 +15,48 @@ module Display
   def number_players_error
     puts 'Enter a number greater than 0.'
   end
+
+  def display_hidden_word(array)
+    puts array.join(' ')
+  end
+
+  def display_guesses(array)
+    puts "Letters guessed: #{array.join(', ')}"
+  end
+
+  def ask_guess(name)
+    puts "It's #{name}'s turn.  Guess a letter or guess the whole word."
+  end
+
+  def display_chances_left(number)
+    puts "You have #{number} incorrect guess(es) left!"
+  end
+
+  def correct_guess(guess)
+    puts "Yep! #{guess} is in the word!"
+  end
+
+  def incorrect_guess(guess)
+    puts "Nope, #{guess} isn't a letter in the word!"
+  end
+
+  def correct_word(guess)
+    puts "That's it! The word was #{guess}!"
+  end
+
+  def incorrect_word(guess)
+    puts "Nope, the word isn't #{guess}."
+  end
+
+  def invalid_guess
+    puts "Guess a letter (a-z) that hasn't already been picked!"
+  end
+
+  def display_winner(name)
+    puts "Congratulations #{name}! You won!"
+  end
+
+  def display_lose(word)
+    puts "Too bad! The word was #{word}"
+  end
 end

@@ -18,7 +18,7 @@ class Board
 
   def display_board
     display_hidden_word(correct_letters)
-    display_guesses(@guesses)
+    display_guesses(@guesses.sort!)
     display_chances_left(@chances - @incorrect_guesses)
   end
 
@@ -27,18 +27,14 @@ class Board
   end
 
   def make_guess(guess)
-    if guess.length > 1
-      check_word(guess)
-    else
-      check_letter(guess)
-    end
+    guess.length > 1 ? check_word(guess) : check_letter(guess)
   end
 
   def check_word(guess)
     if @word == guess
       correct_word(guess)
       guess.chars.each do |char|
-        @guesses.push(char).sort! unless @guesses.include?(char)
+        @guesses.push(char) unless @guesses.include?(char)
       end
     else
       @incorrect_guesses += 1
@@ -47,7 +43,7 @@ class Board
   end
 
   def check_letter(guess)
-    @guesses.push(guess).sort!
+    @guesses.push(guess)
     if @word.include?(guess)
       correct_guess(guess)
     else
@@ -56,11 +52,11 @@ class Board
     end
   end
 
-  def check_win
+  def win?
     correct_letters.none?('_')
   end
 
-  def check_lose
+  def lose?
     @incorrect_guesses >= @chances
   end
 end

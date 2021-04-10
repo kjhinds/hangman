@@ -10,7 +10,6 @@ class Game
     @players = []
     @current_turn = 0
     @winner = false
-    @word = false
   end
 
   def play
@@ -38,12 +37,12 @@ class Game
     current_player = @players[@current_turn % @players.length]
     guess = get_player_guess(current_player)
     @board.make_guess(guess)
-    if @board.check_win
+    if @board.win?
       @winner = current_player
       return
     end
     @current_turn += 1
-    turns unless @board.check_lose
+    turns unless @board.lose?
   end
 
   def conclusion

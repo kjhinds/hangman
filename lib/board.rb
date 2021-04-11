@@ -1,5 +1,6 @@
 class Board
   include Display
+  include BasicSerializable
   attr_reader :incorrect_guesses, :guesses, :word
 
   def initialize

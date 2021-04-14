@@ -26,14 +26,29 @@ class Game
     file = File.open(filename, 'w')
     file.puts(serialize)
     file.close
+    file_saved(filename)
+  end
+
+  def load
+    loop do
+      load_which_file
+      Dir.mkdir('saves') unless Dir.exist?('saves')
+      display_files(Dir.entries('saves'))
+      response = gets.chomp
+      break if response == ''
+
+      next unless File.exist?("saves/#{response}")
+
+      data = File.read("saves/#{response}")
+      unserialize(data)
+      break
+    end
   end
 
   def serialize
     obj = {}
     obj['board'] = @board.serialize
-    obj['players'] = @players.map do |player|
-      player.serialize
-    end
+    obj['players'] = @players.map(&:serialize)
     obj['current_turn'] = @current_turn
     obj['winner'] = @winner
 
@@ -70,9 +85,7 @@ class Game
   end
 
   def turns
-    @board.display_board
     current_player = @players[@current_turn % @players.length]
-    ask_save
     guess = get_player_guess(current_player)
     @board.make_guess(guess)
     if @board.win?
@@ -87,21 +100,16 @@ class Game
     @winner ? display_winner(@winner.name) : display_lose(@board.word)
   end
 
-  def ask_save
-    puts 'Save game? (y/n)'
-    ask_filename if gets.chomp.downcase == 'y'
-  end
-
   def ask_filename
-    puts 'Filename?'
+    ask_for_filename
     filename = gets.chomp
-    check_filename(filename) ? save("saves/#{filename}") : ask_save
+    check_filename(filename) ? save("saves/#{filename}") : not_saved
   end
 
   def check_filename(filename)
     return true unless File.exist?("saves/#{filename}")
 
-    puts 'File exists. Overwrite? (y/n)'
+    file_exists
     return true if gets.chomp.downcase == 'y'
   end
 
@@ -120,9 +128,15 @@ class Game
   end
 
   def get_player_guess(player)
-    ask_guess(player.name)
     loop do
+      @board.display_board
+      ask_guess(player.name)
+      ask_save
       guess = gets.chomp.downcase
+      if guess == '/s'
+        ask_filename
+        next
+      end
       return guess if valid_guess?(guess)
 
       invalid_guess

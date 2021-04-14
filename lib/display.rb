@@ -17,6 +17,7 @@ module Display
   end
 
   def display_hidden_word(array)
+    puts ''
     puts array.join(' ')
   end
 
@@ -58,5 +59,33 @@ module Display
 
   def display_lose(word)
     puts "Too bad! The word was #{word}"
+  end
+
+  def not_saved
+    puts 'Game NOT saved.'
+  end
+
+  def file_saved(filename)
+    puts "File saved as #{filename}"
+  end
+
+  def ask_save
+    puts 'Type /s to save'
+  end
+
+  def ask_for_filename
+    puts 'Filename?'
+  end
+
+  def file_exists
+    puts 'File exists. Overwrite? (y/n)'
+  end
+
+  def load_which_file
+    puts 'Which file to load?'
+  end
+
+  def display_files(files)
+    puts files
   end
 end

@@ -22,18 +22,12 @@ class Game
     conclusion
   end
 
-  def save(filename)
-    file = File.open(filename, 'w')
-    file.puts(serialize)
-    file.close
-    file_saved(filename)
-  end
-
   def load
     loop do
       load_which_file
       Dir.mkdir('saves') unless Dir.exist?('saves')
-      display_files(Dir.entries('saves'))
+      files = Dir.entries('saves').reject { |file| ['..', '.'].include?(file) }
+      display_files(files)
       response = gets.chomp
       break if response == ''
 
@@ -43,6 +37,15 @@ class Game
       unserialize(data)
       break
     end
+  end
+
+  private
+
+  def save(filename)
+    file = File.open(filename, 'w')
+    file.puts(serialize)
+    file.close
+    file_saved(filename)
   end
 
   def serialize
@@ -70,8 +73,6 @@ class Game
     @winner = obj['winner']
     @resume = true
   end
-
-  private
 
   def introduction
     display_introduction
@@ -103,6 +104,7 @@ class Game
   def ask_filename
     ask_for_filename
     filename = gets.chomp
+    Dir.mkdir('saves') unless Dir.exist?('saves')
     check_filename(filename) ? save("saves/#{filename}") : not_saved
   end
 
